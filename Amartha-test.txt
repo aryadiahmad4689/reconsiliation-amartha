@@ -1,5 +1,0 @@
-Hai Amartha terimah kasih atas test yang di berikan. di bawah ini saya lampirkan Link jawaban dari soal yang di berikan
-
-- Saya menggunakan Go Programming Languange
-- Saya memilih soal nomor dua untuk di selesaikan(Reconsilition)
-- Link Code: https://github.com/aryadiahmad4689/reconsiliation-amartha
