@@ -1,0 +1,33 @@
+@startuml
+title Rekonsiliasi Transaksi (Sequence)
+
+participant "CLI Main" as Main
+participant "CSV Loader" as Loader
+participant "Reconcile Facade" as Recon
+participant "DefaultReconciler" as Reconciler
+participant "MatchingStrategy" as Strategy
+participant "stdout" as Out
+
+Main -> Loader: LoadSystemCSV(systemPath)
+Loader --> Main: []SystemTransaction
+
+Main -> Loader: LoadBankCSV(bankPath, bankName)
+Loader --> Main: map[string][]BankStatement
+
+Main -> Recon: Reconcile(sysTxs, bankData, start, end)
+Recon -> Reconciler: Reconcile(sysTxs, bankData, start, end)
+
+Reconciler -> Strategy: Match(sysPos, bankPos)
+Strategy -> Strategy: groupByDateSys(sys)
+Strategy -> Strategy: groupByDateBank(bank)
+Strategy -> Strategy: collectSortedDates(sysByDate, bankByDate)
+loop d in dates
+  Strategy -> Strategy: pairForDate(d, sList, bList, tol=5000)
+end
+Strategy --> Reconciler: matched, unmatchedSys, unmatchedBank
+
+Reconciler --> Recon: Result(summary, details)
+Recon --> Main: Result
+Main -> Out: JSON(Result)
+
+@enduml
